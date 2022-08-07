@@ -7,7 +7,8 @@ public class PlayerBallController : MonoBehaviour
     Rigidbody rbPlayer;
     public float jumpForceX;
     public float jumpForceY;
-    
+
+    public bool crash;
 
     void Start()
     {
@@ -28,14 +29,35 @@ public class PlayerBallController : MonoBehaviour
 
     public void PlayerBallJump()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && crash==false)
         {
+            
             //rbPlayer.AddForce(new Vector2(jumpForceX, jumpForceY));
             rbPlayer.velocity = new Vector2(jumpForceX, jumpForceY);
-            
-            
 
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space) && crash ==true)
+        {
             
+            rbPlayer.velocity = new Vector2(-jumpForceX, jumpForceY);
         }
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "RWall")
+        {
+            crash = true;     
+        }
+
+        else if (other.tag == "LWall")
+        {
+            crash = false;
+        }
+    }
+    
+
+
+
 }
