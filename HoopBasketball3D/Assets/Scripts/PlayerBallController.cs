@@ -29,7 +29,7 @@ public class PlayerBallController : MonoBehaviour
 
     public void PlayerBallJump()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && crash==false)
+        if (Input.GetKeyDown(KeyCode.Space) && rbPlayer.velocity.x>0)
         {
             
             //rbPlayer.AddForce(new Vector2(jumpForceX, jumpForceY));
@@ -37,7 +37,7 @@ public class PlayerBallController : MonoBehaviour
 
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && crash ==true)
+        if (Input.GetKeyDown(KeyCode.Space) && rbPlayer.velocity.x<0)
         {
             
             rbPlayer.velocity = new Vector2(-jumpForceX, jumpForceY);
