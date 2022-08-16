@@ -1,13 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PointsManagment : MonoBehaviour
 {
     public float points;
-    public GameObject file, pota;
-    
+    public GameObject file, pota, timeManager;
+    public float time;
     public bool pointsReady = true;
+
+   
     // Start is called before the first frame update
     void Start()
     {
@@ -20,11 +23,26 @@ public class PointsManagment : MonoBehaviour
 
     }
 
+    private void FixedUpdate()
+    {
+        TimeManager();
+    }
+
+
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "PointsDetector")
         {
             points++;
+            time -= 30;
+            if (time<200)
+            {
+                time = 200;
+            }
+            timeManager.GetComponent<Slider>().maxValue = time;
+            timeManager.GetComponent<Slider>().value = time;
+
             file.gameObject.GetComponent<Collider2D>().isTrigger = true;
             if (points%2==0)
             {
@@ -52,5 +70,15 @@ public class PointsManagment : MonoBehaviour
             file.gameObject.GetComponent<Collider2D>().isTrigger = false;
             //pointsReady = true;
         }
+    }
+
+    public void TimeManager()
+    {
+        
+        
+        timeManager.GetComponent<Slider>().value -= 1f;
+        
+        
+
     }
 }
