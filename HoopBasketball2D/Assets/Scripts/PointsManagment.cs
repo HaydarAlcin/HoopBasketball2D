@@ -7,14 +7,27 @@ public class PointsManagment : MonoBehaviour
 {
     public float points;
     public GameObject file, pota, timeManager;
+    public GameObject timeColor; //Süre azaldýðýnda rengi deðiþtirmek için bir nesne tanýmlýyoruz.
+
+    ScoreManager Score;
+
     public float time;
     public bool pointsReady = true;
 
-   
+    public float redColor;
+    public float greenColor;
+    public float blueColor;
+    public float colorChange = 0.02f;
+
+    public float maxTimeValue;
+
+    
+    public bool gameOver;
     // Start is called before the first frame update
     void Start()
     {
-        
+        gameOver = false;
+        Score = Object.FindObjectOfType<ScoreManager>();
     }
 
     // Update is called once per frame
@@ -26,6 +39,25 @@ public class PointsManagment : MonoBehaviour
     private void FixedUpdate()
     {
         TimeManager();
+
+        if (timeManager.GetComponent<Slider>().value < time/1.5f)
+        {
+
+            redColor= timeColor.GetComponent<Image>().color.r;
+            blueColor = timeColor.GetComponent<Image>().color.b;
+            greenColor = timeColor.GetComponent<Image>().color.g;
+            
+            redColor += colorChange;
+            timeColor.GetComponent<Image>().color = new Color(redColor,greenColor,blueColor);
+
+            if (timeManager.GetComponent<Slider>().value < time/3)
+            {
+                redColor += colorChange;
+                greenColor -= colorChange;
+                blueColor -= colorChange;
+                timeColor.GetComponent<Image>().color = new Color(1, greenColor, blueColor);
+            }
+        }
     }
 
 
@@ -34,12 +66,21 @@ public class PointsManagment : MonoBehaviour
     {
         if (other.tag == "PointsDetector")
         {
+            
             points++;
+            gameOver = false;
+            
+            
+            Score.ScoreChange();
+
             time -= 30;
             if (time<200)
             {
                 time = 200;
             }
+            
+            timeColor.GetComponent<Image>().color = new Color(0.5f,1f , 0.3f);
+            
             timeManager.GetComponent<Slider>().maxValue = time;
             timeManager.GetComponent<Slider>().value = time;
 
@@ -69,15 +110,20 @@ public class PointsManagment : MonoBehaviour
         {
             file.gameObject.GetComponent<Collider2D>().isTrigger = false;
             //pointsReady = true;
+            
         }
     }
 
     public void TimeManager()
     {
-        
-        
+        //maxTimeValue = timeManager.GetComponent<Slider>().maxValue;
+
         timeManager.GetComponent<Slider>().value -= 1f;
-        
+
+        if (timeManager.GetComponent<Slider>().value==0)
+        {
+            gameOver = true;
+        }
         
 
     }

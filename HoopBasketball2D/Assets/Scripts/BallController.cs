@@ -52,11 +52,18 @@ public class BallController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space) && this.gameObject.GetComponent<PointsManagment>().points%2==0)
         {
-            rbPlayer.velocity = new Vector2(-jumpForceX, jumpForceY);
+            if (this.gameObject.GetComponent<PointsManagment>().gameOver==false)
+            {
+                rbPlayer.velocity = new Vector2(-jumpForceX, jumpForceY);
+            }
         }
         if (Input.GetKeyDown(KeyCode.Space) && this.gameObject.GetComponent<PointsManagment>().points % 2 == 1)
         {
-            rbPlayer.velocity = new Vector2(jumpForceX, jumpForceY);
+            if (this.gameObject.GetComponent<PointsManagment>().gameOver == false)
+            {
+                rbPlayer.velocity = new Vector2(jumpForceX, jumpForceY);
+            }
+                
         }
 
     }
@@ -64,25 +71,40 @@ public class BallController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D wall)
     {
-        if (wall.name=="LeftWall"&& teleportLeft == true)
+        if (wall.name=="LeftWall")
         {
             teleportRight = false;
             yatayEksen = this.gameObject.transform.position.x;
             yatayEksen = -yatayEksen;
-            this.gameObject.transform.position = new Vector3(yatayEksen, transform.position.y, transform.position.z);
-            teleportLeft = true;
+            this.gameObject.transform.position = new Vector3(6, transform.position.y, transform.position.z);
+            
+
+            RightWallCheck();
         }
         if (wall.name=="RightWall")
         {
             teleportLeft = false;
             yatayEksen = this.gameObject.transform.position.x;
             yatayEksen = -yatayEksen;
-            this.gameObject.transform.position = new Vector3(yatayEksen, transform.position.y, transform.position.z);
-            teleportRight=true;
-
+            this.gameObject.transform.position = new Vector3(-5.68f, transform.position.y, transform.position.z);
+            
+            LefttWallCheck();
         }
     }
 
-    
+    IEnumerator RightWallCheck()
+    {
+        yield return new WaitForSeconds(0.01f);
+        teleportRight = true;
+
+    }
+    IEnumerator LefttWallCheck()
+    {
+        yield return new WaitForSeconds(0.01f);
+        teleportLeft = true;
+
+    }
+
+
 
 }
