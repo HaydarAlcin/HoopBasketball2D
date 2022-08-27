@@ -8,10 +8,12 @@ public class InGameManager : MonoBehaviour
 {
     public GameObject Panel;
     public GameObject PauseBtn;
+
+    public PointsManagment gameOverpanel;
     // Start is called before the first frame update
     void Start()
     {
-        
+        gameOverpanel = Object.FindObjectOfType<PointsManagment>();
     }
 
     // Update is called once per frame
@@ -38,6 +40,13 @@ public class InGameManager : MonoBehaviour
 
     public void RestartButton()
     {
+        //gameOverpanel.gameOverPanel.gameObject.GetComponent<CanvasGroup>().alpha = 0;
         SceneManager.LoadScene(0);
+        
+    }
+
+    public void HomeButton()
+    {
+        SceneManager.LoadScene(1);
     }
 }

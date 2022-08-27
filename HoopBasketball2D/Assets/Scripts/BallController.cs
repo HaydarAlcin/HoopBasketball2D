@@ -50,22 +50,26 @@ public class BallController : MonoBehaviour
         //    rbPlayer.velocity = new Vector2(-jumpForceX, jumpForceY);
         //}
 
-        if (Input.GetKeyDown(KeyCode.Space) && this.gameObject.GetComponent<PointsManagment>().points%2==0)
+        if (Input.touchCount>0)
         {
-            if (this.gameObject.GetComponent<PointsManagment>().gameOver==false)
-            {
-                rbPlayer.velocity = new Vector2(-jumpForceX, jumpForceY);
-            }
-        }
-        if (Input.GetKeyDown(KeyCode.Space) && this.gameObject.GetComponent<PointsManagment>().points % 2 == 1)
-        {
-            if (this.gameObject.GetComponent<PointsManagment>().gameOver == false)
-            {
-                rbPlayer.velocity = new Vector2(jumpForceX, jumpForceY);
-            }
-                
-        }
+            Touch parmak = Input.GetTouch(0);
 
+            if (parmak.phase==TouchPhase.Began && this.gameObject.GetComponent<PointsManagment>().points % 2 == 0)
+            {
+                if (this.gameObject.GetComponent<PointsManagment>().gameOver == false)
+                {
+                    rbPlayer.velocity = new Vector2(-jumpForceX, jumpForceY);
+                }
+            }
+            if (parmak.phase == TouchPhase.Began && this.gameObject.GetComponent<PointsManagment>().points % 2 == 1)
+            {
+                if (this.gameObject.GetComponent<PointsManagment>().gameOver == false)
+                {
+                    rbPlayer.velocity = new Vector2(jumpForceX, jumpForceY);
+                }
+
+            }
+        }
     }
 
 

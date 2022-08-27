@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class PointsManagment : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class PointsManagment : MonoBehaviour
     public GameObject file, pota, timeManager;
     public GameObject timeColor; //Süre azaldýðýnda rengi deðiþtirmek için bir nesne tanýmlýyoruz.
 
+    public GameObject gameOverPanel;
     ScoreManager Score;
 
     public float time;
@@ -23,10 +25,13 @@ public class PointsManagment : MonoBehaviour
 
     
     public bool gameOver;
+    public bool wall;
     // Start is called before the first frame update
     void Start()
     {
+        
         gameOver = false;
+        wall = false;
         Score = Object.FindObjectOfType<ScoreManager>();
     }
 
@@ -39,6 +44,7 @@ public class PointsManagment : MonoBehaviour
     private void FixedUpdate()
     {
         TimeManager();
+        
 
         if (timeManager.GetComponent<Slider>().value < time/1.5f)
         {
@@ -74,7 +80,7 @@ public class PointsManagment : MonoBehaviour
             Score.ScoreChange();
 
             time -= 30;
-            if (time<200)
+            if (time<250)
             {
                 time = 200;
             }
@@ -85,6 +91,7 @@ public class PointsManagment : MonoBehaviour
             timeManager.GetComponent<Slider>().value = time;
 
             file.gameObject.GetComponent<Collider2D>().isTrigger = true;
+            StartCoroutine(HoopTrigger());
             if (points%2==0)
             {
                 pota.gameObject.transform.position = new Vector3(-5f,Random.Range(-2f,6f),transform.position.z);
@@ -99,19 +106,18 @@ public class PointsManagment : MonoBehaviour
                 this.gameObject.GetComponent<BallController>().teleportRight = true;
                 this.gameObject.GetComponent<BallController>().teleportLeft = true;
             }
+
+
+
             //pointsReady = false;
             //other.GetComponentsInParent<Transform>.position = new Vector2(Random.Range(-5,10), Random.Range(0, 8));
-
             //other.gameObject.GetComponentInParent<Transform>().position= new Vector2(Random.Range(-5, 10), Random.Range(0, 8));
-
         }
 
-        if (other.tag == "AgainPoints")
-        {
-            file.gameObject.GetComponent<Collider2D>().isTrigger = false;
-            //pointsReady = true;
-            
-        }
+
+
+        //Süre bittiðinde top eðer yere deðiyorsa GameOverPaneli açmamýz gerek Çünkü Top süre bittiðinde havada olabilir ve düþtüðünde basket olabilir.
+        
     }
 
     public void TimeManager()
@@ -123,8 +129,39 @@ public class PointsManagment : MonoBehaviour
         if (timeManager.GetComponent<Slider>().value==0)
         {
             gameOver = true;
+            StartCoroutine(GameOverControl());
         }
         
+
+    }
+
+    IEnumerator HoopTrigger()
+    {
+        
+        yield return new WaitForSeconds(0.3f);
+        file.gameObject.GetComponent<Collider2D>().isTrigger = false;
+
+    }
+
+    //public void GameOverControl()
+    //{
+    //    if (gameOver==true&&wall==true)
+    //    {
+    //        gameOverPanel.SetActive(true);
+    //        gameOverPanel.gameObject.GetComponent<CanvasGroup>().DOFade(1, 1f);
+    //    }
+    //}
+
+    IEnumerator GameOverControl()
+    {
+        //Süre bittiðinde top eðer yere deðiyorsa GameOverPaneli açmamýz gerek Çünkü Top süre bittiðinde havada olabilir ve düþtüðünde basket olabilir.
+        yield return new WaitForSeconds(1.5f);
+        if (gameOver==true)
+        {
+            gameOverPanel.SetActive(true);
+            gameOverPanel.gameObject.GetComponent<CanvasGroup>().DOFade(1, 1f);
+            gameOverPanel.transform.GetChild(1).GetComponent<Text>().text = points.ToString();
+        }
 
     }
 }
