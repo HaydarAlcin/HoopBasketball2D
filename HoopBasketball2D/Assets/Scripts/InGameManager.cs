@@ -41,12 +41,12 @@ public class InGameManager : MonoBehaviour
     public void RestartButton()
     {
         //gameOverpanel.gameOverPanel.gameObject.GetComponent<CanvasGroup>().alpha = 0;
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
         
     }
 
     public void HomeButton()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(0);
     }
 }
