@@ -26,6 +26,8 @@ public class PointsManagment : MonoBehaviour
     
     public bool gameOver;
     public bool wall;
+
+    public bool crash;
     // Start is called before the first frame update
     void Start()
     {
@@ -70,11 +72,15 @@ public class PointsManagment : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        
+
+
         if (other.tag == "PointsDetector")
         {
             
             points++;
             gameOver = false;
+            crash = false;
             
             
             Score.ScoreChange();
@@ -156,12 +162,28 @@ public class PointsManagment : MonoBehaviour
     {
         //Süre bittiðinde top eðer yere deðiyorsa GameOverPaneli açmamýz gerek Çünkü Top süre bittiðinde havada olabilir ve düþtüðünde basket olabilir.
         yield return new WaitForSeconds(1.5f);
-        if (gameOver==true)
+        if (gameOver==true && crash==true)
         {
             gameOverPanel.SetActive(true);
             gameOverPanel.gameObject.GetComponent<CanvasGroup>().DOFade(1, 1f);
             gameOverPanel.transform.GetChild(1).GetComponent<Text>().text = points.ToString();
         }
 
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.tag=="BottomWall")
+        {
+            crash = true;
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D other)
+    {
+        if (other.gameObject.tag=="BottomWall")
+        {
+            crash = false;
+        }
     }
 }
